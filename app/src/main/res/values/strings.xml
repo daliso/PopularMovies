@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="action_sort_popular">Sort By Popularity</string>
+    <string name="action_sort_rating">Sort By Rating</string>
+    <string name="error_message">Looks like there was an error</string>
+    <string name="sort_popular_toast">Sort by popular</string>
+    <string name="sort_rating_toast">Sort by rating</string>
+</resources>
