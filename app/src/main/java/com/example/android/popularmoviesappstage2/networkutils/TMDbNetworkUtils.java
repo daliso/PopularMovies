@@ -1,4 +1,4 @@
-package com.example.android.popularmoviesappstage1.networkutils;
+package com.example.android.popularmoviesappstage2.networkutils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -29,7 +29,7 @@ public class TMDbNetworkUtils {
 
     private static String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
 
-    private static String API_KEY = "INSERT_YOUR_API_KEY_HERE"; // TODO: Insert API Key Here
+    private static String API_KEY = "6c74ffc062ba4bf4e9f30282fe2cceea"; // "INSERT_YOUR_API_KEY_HERE"; TODO: Insert API Key Here
 
     final static String LANG_PARAM = "language";
     final static String LANG = "en-US";
@@ -39,7 +39,7 @@ public class TMDbNetworkUtils {
 
 
     public enum SortOrder {
-        POPULAR("popular"), RATING("top_rated");
+        POPULAR("popular"), RATING("top_rated"), FAVORITE("favorite");
 
         private String sortOrderString;
 
