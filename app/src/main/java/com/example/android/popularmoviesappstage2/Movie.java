@@ -21,6 +21,7 @@ public class Movie implements Serializable {
     public String mOverview;
     public String mUserRating;
     public String mReleaseDate;
+    public String mTMDBId;
 
     public Movie(Map<String,String> movieData){
         mTitle = movieData.get("title");
@@ -28,6 +29,7 @@ public class Movie implements Serializable {
         mOverview = movieData.get("overview");
         mUserRating = movieData.get("rating");
         mReleaseDate = movieData.get("releaseDate");
+        mTMDBId = movieData.get("tmdbId");
     }
     public static List<Movie> createMovies(List<Map<String,String>> moviesCollection){
 
@@ -50,7 +52,7 @@ public class Movie implements Serializable {
         int releaseIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE);
         int synopsisIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS);
         int titleIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-        // int tmdbIdIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_TMDB_ID);
+        int tmdbIdIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_TMDB_ID);
 
         while(c.moveToNext()){
             Map<String,String> movieMap = new HashMap<>();
@@ -59,7 +61,7 @@ public class Movie implements Serializable {
             movieMap.put("overview",c.getString(synopsisIndex));
             movieMap.put("rating",c.getString(ratingIndex));
             movieMap.put("releaseDate",c.getString(releaseIndex));
-
+            movieMap.put("tmdbId",c.getString(tmdbIdIndex));
             movies.add(new Movie(movieMap));
 
         }

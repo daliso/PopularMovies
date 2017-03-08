@@ -98,6 +98,7 @@ public class TMDbNetworkUtils {
                 movieMap.put("overview",movieJSON.getString("overview"));
                 movieMap.put("rating",String.valueOf(movieJSON.getDouble("vote_average")));
                 movieMap.put("releaseDate",movieJSON.getString("release_date"));
+                movieMap.put("tmdbId",String.valueOf(movieJSON.getInt("id")));
 
                 movieCollection.add(movieMap);
 
