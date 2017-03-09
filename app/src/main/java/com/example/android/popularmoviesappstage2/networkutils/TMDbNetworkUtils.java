@@ -37,6 +37,9 @@ public class TMDbNetworkUtils {
     final static String PAGE = "1";
     final static String KEY_PARAM = "api_key";
 
+    final static String VIDEOS_PATH = "videos";
+    final static String REVIEWS_PATH = "reviews";
+
 
     public enum SortOrder {
         POPULAR("popular"), RATING("top_rated"), FAVORITE("favorite");
@@ -54,7 +57,7 @@ public class TMDbNetworkUtils {
 
     /**
      * Returns the collection of movie records obtained via the TMDb API
-     * This is return as a list of maps, each map is a key value pair.
+     * This is returned as a list of maps, each map is a key value pair.
      *
      * @param order The sort order for the results, either by rating or popularity.
      * @return The collection of movie records
@@ -74,9 +77,31 @@ public class TMDbNetworkUtils {
     }
 
     /**
+     * Returns the collection of video trailer records obtained via the TMDb API
+     * This is returned as a list of maps, each map is a key value pair.
+     *
+     * @param id The movie id for the videos
+     * @return The collection of movie trailer records
+     */
+    public static List<Map<String,String>> getMovieVideos(String id) {
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = getResponseFromHttpUrl(buildMovieDetailUrl(id,VIDEOS_PATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("NetTalk","error in accessing network: "+ e.toString());
+            return null;
+        }
+
+        return parseTMDbJSONVideos(jsonResponse);
+    }
+
+
+    /**
      * Parses the JSON string obtained via an http request
      *
-     * @param jsonString The JSON from the 'discover' api
+     * @param jsonString The JSON from /movie
      * @return The collection of movie records
      */
     public static List<Map<String,String>> parseTMDbJSON(String jsonString) {
@@ -115,6 +140,41 @@ public class TMDbNetworkUtils {
 
 
     /**
+     * Parses the JSON string obtained via an http request
+     *
+     * @param jsonString The JSON from /movie/{movie_id}/videos
+     * @return The collection of video trailer records
+     */
+    public static List<Map<String,String>> parseTMDbJSONVideos(String jsonString) {
+
+        List<Map<String,String>> videoCollection = new ArrayList<>();
+        JSONObject jObject = null;
+
+        try {
+            Map<String, String> videoMap;
+            jObject = new JSONObject(jsonString);
+            JSONArray videoResultsList = jObject.getJSONArray("results");
+
+            for(int i=0;i<videoResultsList.length();i++){
+                JSONObject videoJSON = videoResultsList.getJSONObject(i);
+                videoMap = new HashMap<>();
+                videoMap.put("site",videoJSON.getString("site"));
+                videoMap.put("name",videoJSON.getString("name"));
+                videoMap.put("key",videoJSON.getString("key"));
+                videoCollection.add( videoMap);
+            }
+        }
+        catch(Exception e){
+            Log.d("NetTalk","something went wrong: "+ e.toString());
+            return null;
+        }
+
+        return videoCollection;
+    }
+
+
+
+    /**
      * Builds the URL used to talk to the TMDb api.
      * @param order The sort order for the results, either by rating or popularity.
      * @return The URL to use to query TMDb.
@@ -125,6 +185,31 @@ public class TMDbNetworkUtils {
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(LANG_PARAM, LANG)
                 .appendQueryParameter(PAGE_PARAM, PAGE)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
+    }
+
+    /**
+     * Builds the URL used to talk to the TMDb api.
+     * @param id The id of the movie for which videos are needed.
+     * @return The URL to use to query TMDb.
+     */
+    public static URL buildMovieDetailUrl(String id, String detail) {
+
+        Uri builtUri = Uri.parse(TMDB_BASE_URL+id).buildUpon()
+                .appendPath(detail)
+                .appendQueryParameter(KEY_PARAM, API_KEY)
+                .appendQueryParameter(LANG_PARAM, LANG)
                 .build();
 
         URL url = null;
