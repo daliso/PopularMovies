@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements TMDbAdapter.ItemC
     }
 
     @Override
-    public Loader<List<Movie>> onCreateLoader(int id, final Bundle loaderArgs) {
+    public Loader<List<Movie>> onCreateLoader(final int id, final Bundle loaderArgs) {
 
         return new AsyncTaskLoader<List<Movie>>(this) {
 
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements TMDbAdapter.ItemC
             @Override
             public List<Movie> loadInBackground() {
 
+
                 try {
 
                     List<Map<String,String>> moviesCollection = null;
@@ -110,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements TMDbAdapter.ItemC
 
                     }
                     else{
+                        if(!isOnline()){
+                            return null;
+                        }
                         moviesCollection = TMDbNetworkUtils.getMovies(mSortOrder);
                     }
 
@@ -229,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements TMDbAdapter.ItemC
         return super.onOptionsItemSelected(item);
     }
 
-    // Todo: put online protection code back
     public boolean isOnline() {
         Context context = this;
 

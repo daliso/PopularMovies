@@ -46,7 +46,6 @@ public class Movie implements Serializable {
 
         List<Movie> movies = new ArrayList<>();
 
-        // int idIndex = c.getColumnIndex(MovieContract.MovieEntry._ID);
         int posterIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER);
         int ratingIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING);
         int releaseIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE);

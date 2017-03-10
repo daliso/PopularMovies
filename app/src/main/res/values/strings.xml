@@ -4,6 +4,8 @@
     <string name="action_sort_rating">Sort By Rating</string>
     <string name="action_sort_favorite">Sort By Favorite</string>
     <string name="error_message">Looks like there was an error</string>
+    <string name="error_message_videos">Looks like there was an error getting the trailers</string>
+    <string name="error_message_reviews">Looks like there was an error getting the reviews</string>
     <string name="sort_popular_toast">Sort by popular</string>
     <string name="sort_rating_toast">Sort by rating</string>
     <string name="sort_favorite_toast">Sort by favorite</string>

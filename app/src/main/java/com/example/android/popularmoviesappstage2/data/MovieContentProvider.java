@@ -73,16 +73,12 @@ public class MovieContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        // Get access to underlying database (read-only for query)
         final SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
 
-        // Write URI match code and set a variable to return a Cursor
         int match = sUriMatcher.match(uri);
         Cursor retCursor;
 
-        // Query for the tasks directory and write a default case
         switch (match) {
-            // Query for the tasks directory
             case MOVIES:
                 retCursor =  db.query(MovieContract.MovieEntry.TABLE_NAME,
                         projection,
@@ -92,7 +88,6 @@ public class MovieContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-            // Default exception
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -112,14 +107,11 @@ public class MovieContentProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        int moviesDeleted; // starts as 0
+        int moviesDeleted;
 
         switch (match) {
-            // Handle the single item case, recognized by the ID included in the URI path
             case MOVIES_WITH_ID:
-                // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
-                // Use selections/selectionArgs to filter for this ID
                 moviesDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME, "tmdbid=?", new String[]{id});
                 break;
             default:
@@ -139,17 +131,13 @@ public class MovieContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
 
-        //Keep track of if an update occurs
         int moviesUpdated;
 
-        // match code
         int match = sUriMatcher.match(uri);
 
         switch (match) {
             case MOVIES_WITH_ID:
-                //update a single task by getting the id
                 String id = uri.getPathSegments().get(1);
-                //using selections
                 moviesUpdated = mMovieDbHelper.getWritableDatabase().update(MovieContract.MovieEntry.TABLE_NAME, values, "_id=?", new String[]{id});
                 break;
             default:
@@ -157,11 +145,9 @@ public class MovieContentProvider extends ContentProvider {
         }
 
         if (moviesUpdated != 0) {
-            //set notifications if a task was updated
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        // return number of tasks updated
         return moviesUpdated;
     }
 

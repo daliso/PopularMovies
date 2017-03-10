@@ -97,6 +97,27 @@ public class TMDbNetworkUtils {
         return parseTMDbJSONVideos(jsonResponse);
     }
 
+    /**
+     * Returns the collection of video trailer records obtained via the TMDb API
+     * This is returned as a list of maps, each map is a key value pair.
+     *
+     * @param id The movie id for the videos
+     * @return The collection of movie review records
+     */
+    public static List<Map<String,String>> getMovieReviews(String id) {
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = getResponseFromHttpUrl(buildMovieDetailUrl(id,REVIEWS_PATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("NetTalk","error in accessing network: "+ e.toString());
+            return null;
+        }
+
+        return parseTMDbJSONReviews(jsonResponse);
+    }
+
 
     /**
      * Parses the JSON string obtained via an http request
@@ -170,6 +191,40 @@ public class TMDbNetworkUtils {
         }
 
         return videoCollection;
+    }
+
+    /**
+     * Parses the JSON string obtained via an http request
+     *
+     * @param jsonString The JSON from /movie/{movie_id}/reviews
+     * @return The collection of video trailer records
+     */
+    public static List<Map<String,String>> parseTMDbJSONReviews(String jsonString) {
+
+        List<Map<String,String>> reviewCollection = new ArrayList<>();
+        JSONObject jObject = null;
+
+        try {
+            Map<String, String> reviewMap;
+            jObject = new JSONObject(jsonString);
+            JSONArray reviewResultsList = jObject.getJSONArray("results");
+
+            for(int i=0;i<reviewResultsList.length();i++){
+                JSONObject videoJSON = reviewResultsList.getJSONObject(i);
+                reviewMap = new HashMap<>();
+                reviewMap.put("id",videoJSON.getString("id"));
+                reviewMap.put("author",videoJSON.getString("author"));
+                reviewMap.put("content",videoJSON.getString("content"));
+                reviewMap.put("url",videoJSON.getString("url"));
+                reviewCollection.add( reviewMap);
+            }
+        }
+        catch(Exception e){
+            Log.d("NetTalk","something went wrong: "+ e.toString());
+            return null;
+        }
+
+        return reviewCollection;
     }
 
 
